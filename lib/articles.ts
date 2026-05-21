@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import remarkGfm from "remark-gfm";
 import html from "remark-html";
 
 const articlesDir = path.join(process.cwd(), "content/articles");
@@ -12,6 +13,7 @@ export interface Article {
   description: string;
   date: string;
   category: string;
+  thumbnail?: string;
   content?: string;
 }
 
@@ -34,6 +36,7 @@ export function getArticleBySlug(slug: string): Article | null {
     description: data.description ?? "",
     date: data.date ?? "",
     category: data.category ?? "",
+    thumbnail: data.thumbnail ?? "",
     content,
   };
 }
@@ -41,7 +44,10 @@ export function getArticleBySlug(slug: string): Article | null {
 export async function getArticleWithHtml(slug: string): Promise<Article | null> {
   const article = getArticleBySlug(slug);
   if (!article || !article.content) return null;
-  const processed = await remark().use(html).process(article.content);
+  const processed = await remark()
+    .use(remarkGfm)
+    .use(html, { sanitize: false })
+    .process(article.content);
   return { ...article, content: processed.toString() };
 }
 
