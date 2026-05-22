@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import config from '@/config';
+import LogoutButton from '@/components/admin/LogoutButton';
 
 async function getArticles() {
   const base = process.env.VERCEL_URL
@@ -50,7 +51,8 @@ export default async function AdminDashboard() {
             <h1 className="text-2xl font-bold">ダッシュボード</h1>
             <p className="text-slate-500 text-sm mt-1">{config.name}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+            <LogoutButton />
             <Link href="/" target="_blank" className="text-sm text-slate-500 hover:text-white transition-colors">
               サイトを見る →
             </Link>
